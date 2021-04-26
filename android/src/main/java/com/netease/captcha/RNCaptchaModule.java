@@ -4,7 +4,7 @@ package com.netease.captcha;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReadableMap;
 
 public class RNCaptchaModule extends ReactContextBaseJavaModule {
     private CaptchaHelper captchaHelper = null;
@@ -18,33 +18,21 @@ public class RNCaptchaModule extends ReactContextBaseJavaModule {
 
     @Override
     public String getName() {
-        return "CaptchaHelper";
+        return "NTESCaptchaHelper";
     }
 
     @ReactMethod
-    public void init(String businessId) {
-        captchaHelper.init(reactContext, businessId);
+    public void init(ReadableMap map) {
+        captchaHelper.init(reactContext, map);
     }
 
     @ReactMethod
-    public void showCaptcha(final Callback callback) {
+    public void showCaptcha() {
         if (getCurrentActivity() != null) {
             getCurrentActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    captchaHelper.show(callback);
-                }
-            });
-        }
-    }
-
-    @ReactMethod
-    public void showNoSenseCaptcha(final Callback callback) {
-        if (getCurrentActivity() != null) {
-            getCurrentActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    captchaHelper.showNoSense(callback);
+                    captchaHelper.showCaptcha();
                 }
             });
         }

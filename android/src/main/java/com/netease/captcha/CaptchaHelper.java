@@ -1,10 +1,13 @@
 package com.netease.captcha;
 
 import android.text.TextUtils;
+import android.util.Log;
 
-import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.netease.nis.captcha.Captcha;
 import com.netease.nis.captcha.CaptchaConfiguration;
 import com.netease.nis.captcha.CaptchaListener;
@@ -15,22 +18,40 @@ import com.netease.nis.captcha.CaptchaListener;
 public class CaptchaHelper {
     public static final String TAG = "RNCaptcha";
     private ReactContext mContext = null;
-    private final float dimAmount = 0.5f;
-    private final boolean isTouchOutsideDisappear = true;
-    private final CaptchaConfiguration.LangType langType = CaptchaConfiguration.LangType.LANG_ZH_CN;
-    private String businessId;
+    private float dimAmount = 0.5f;
+    private boolean isTouchOutsideDisappear = true;
+    private CaptchaConfiguration.LangType langType = CaptchaConfiguration.LangType.LANG_ZH_CN;
+    private boolean isDebug = false;
+    private String captcha_id;
+    private boolean is_sense_mode;//是否智能无感知
+    private boolean isHideCloseBtn = false;
+    private boolean useDefaultFallback = true;
+    private int failedMaxRetryCount = 3;
+    private int timeout = 1000 * 10;
 
-    public void init(ReactContext context, String businessId) {
+    public void init(ReactContext context, ReadableMap map) {
         mContext = context;
-        this.businessId = businessId;
+        this.captcha_id = map.hasKey("captcha_id") ? map.getString("captcha_id") : "";
+        this.isDebug = map.hasKey("debug") && map.getBoolean("debug");
+        this.is_sense_mode = map.hasKey("is_no_sense_mode") && map.getBoolean("is_no_sense_mode");
+        this.dimAmount = map.hasKey("dimAmount") ? map.getInt("dimAmount") : 0.5f;
+        this.isTouchOutsideDisappear = map.hasKey("is_touch_outside_disappear") && map.getBoolean("is_touch_outside_disappear");
+        this.timeout = map.hasKey("timeout") ? map.getInt("timeout") : 1000 * 10;
+        this.isHideCloseBtn = map.hasKey("is_hide_close_button") && map.getBoolean("is_hide_close_button");
+        this.useDefaultFallback = map.hasKey("use_default_fallback") && map.getBoolean("use_default_fallback");
+        this.failedMaxRetryCount = map.hasKey("failed_max_retry_count") ? map.getInt("failed_max_retry_count") : 3;
+        if (map.hasKey("language_type")) {
+            langType = string2LangType(map.getString("language_type"));
+        }
     }
 
-    public void show(final Callback callback) {
-        if (TextUtils.isEmpty(businessId)) {
+    public void showCaptcha() {
+        if (TextUtils.isEmpty(captcha_id)) {
+            Log.d(TAG, "业务id不能为空");
             return;
         }
-        final CaptchaConfiguration configuration = new CaptchaConfiguration.Builder()
-                .captchaId(businessId)
+        final CaptchaConfiguration.Builder build = new CaptchaConfiguration.Builder()
+                .captchaId(captcha_id)
                 .listener(new CaptchaListener() {
                     @Override
                     public void onReady() {
@@ -39,110 +60,150 @@ public class CaptchaHelper {
 
                     @Override
                     public void onValidate(String result, String validate, String msg) {
+                        WritableMap event = Arguments.createMap();
                         if (!TextUtils.isEmpty(validate)) {
-                            callback.invoke(true);
+                            event.putString("validate", validate);
+                            sendEvent("onSuccess", event);
                         } else {
-                            WritableNativeMap map = new WritableNativeMap();
-                            map.putInt("code", -1001);
-                            map.putString("msg", msg);
-                            callback.invoke(false);
+                            event.putInt("code", -1001);
+                            event.putString("message", msg);
+                            sendEvent("onError", event);
                         }
                     }
 
                     @Override
                     public void onError(int code, String msg) {
-                        WritableNativeMap map = new WritableNativeMap();
-                        map.putInt("code", code);
-                        map.putString("msg", msg);
-                        callback.invoke(false);
+                        WritableMap event = Arguments.createMap();
+                        event.putInt("code", code);
+                        event.putString("message", msg);
+                        sendEvent("onError", event);
                     }
 
                     @Override
                     public void onClose(Captcha.CloseType closeType) {
-                        WritableNativeMap map = new WritableNativeMap();
+                        WritableMap event = Arguments.createMap();
                         if (closeType == Captcha.CloseType.USER_CLOSE) {
-                            map.putString("msg", "用户关闭验证码");
+                            event.putString("message", "用户关闭验证码");
                         } else if (closeType == Captcha.CloseType.VERIFY_SUCCESS_CLOSE) {
-                            map.putString("msg", "校验通过，流程自动关闭");
+                            event.putString("message", "校验通过，流程自动关闭");
                         } else if (closeType == Captcha.CloseType.TIP_CLOSE) {
-                            map.putString("msg", "loading关闭");
+                            event.putString("message", "loading关闭");
                         }
-                        map.putInt("code", -1000);
-                        callback.invoke(false);
+                        sendEvent("onCancel", event);
                     }
                 })
                 .languageType(langType)
-                .debug(true)
+                .debug(isDebug)
                 .position(-1, -1, 0, 0)
+                .timeout(timeout)
                 .backgroundDimAmount(dimAmount)
-                .touchOutsideDisappear(isTouchOutsideDisappear)
-                .build(mContext);
-        final Captcha captcha = Captcha.getInstance().init(configuration);
+                .failedMaxRetryCount(failedMaxRetryCount)
+                .useDefaultFallback(useDefaultFallback)
+                .hideCloseButton(isHideCloseBtn)
+                .touchOutsideDisappear(isTouchOutsideDisappear);
+        if (is_sense_mode) {
+            build.mode(CaptchaConfiguration.ModeType.MODE_INTELLIGENT_NO_SENSE);
+        }
+        final Captcha captcha = Captcha.getInstance().init(build.build(mContext));
         captcha.validate();
     }
 
-
-    public void showNoSense(final Callback callback) {
-        if (TextUtils.isEmpty(businessId)) {
-            return;
+    private CaptchaConfiguration.LangType string2LangType(String langTypeStr) {
+        CaptchaConfiguration.LangType langType;
+        switch (langTypeStr) {
+            case "zh-TW": {
+                langType = CaptchaConfiguration.LangType.LANG_ZH_TW;
+            }
+            break;
+            case "en": {
+                langType = CaptchaConfiguration.LangType.LANG_EN;
+            }
+            break;
+            case "ja": {
+                langType = CaptchaConfiguration.LangType.LANG_JA;
+            }
+            break;
+            case "ko": {
+                langType = CaptchaConfiguration.LangType.LANG_KO;
+            }
+            break;
+            case "th": {
+                langType = CaptchaConfiguration.LangType.LANG_TH;
+            }
+            break;
+            case "vi": {
+                langType = CaptchaConfiguration.LangType.LANG_VI;
+            }
+            break;
+            case "fr": {
+                langType = CaptchaConfiguration.LangType.LANG_FR;
+            }
+            break;
+            case "ru": {
+                langType = CaptchaConfiguration.LangType.LANG_RU;
+            }
+            break;
+            case "ar": {
+                langType = CaptchaConfiguration.LangType.LANG_AR;
+            }
+            break;
+            case "de": {
+                langType = CaptchaConfiguration.LangType.LANG_DE;
+            }
+            break;
+            case "it": {
+                langType = CaptchaConfiguration.LangType.LANG_IT;
+            }
+            break;
+            case "he": {
+                langType = CaptchaConfiguration.LangType.LANG_HE;
+            }
+            break;
+            case "hi": {
+                langType = CaptchaConfiguration.LangType.LANG_HI;
+            }
+            break;
+            case "id": {
+                langType = CaptchaConfiguration.LangType.LANG_ID;
+            }
+            break;
+            case "my": {
+                langType = CaptchaConfiguration.LangType.LANG_MY;
+            }
+            break;
+            case "lo": {
+                langType = CaptchaConfiguration.LangType.LANG_LO;
+            }
+            break;
+            case "ms": {
+                langType = CaptchaConfiguration.LangType.LANG_MS;
+            }
+            break;
+            case "pl": {
+                langType = CaptchaConfiguration.LangType.LANG_PL;
+            }
+            break;
+            case "pt": {
+                langType = CaptchaConfiguration.LangType.LANG_PT;
+            }
+            break;
+            case "es": {
+                langType = CaptchaConfiguration.LangType.LANG_ES;
+            }
+            break;
+            case "tr": {
+                langType = CaptchaConfiguration.LangType.LANG_TR;
+            }
+            break;
+            default:
+                langType = CaptchaConfiguration.LangType.LANG_ZH_CN;
+                break;
         }
-        int failedMaxRetryCount = 3;
-        final CaptchaConfiguration configuration = new CaptchaConfiguration.Builder()
-                .captchaId(businessId)// 验证码业务id
-                // 验证码类型，默认为传统验证码，如果要使用无感知请设置以下类型,否则请不要设置
-                .mode(CaptchaConfiguration.ModeType.MODE_INTELLIGENT_NO_SENSE)
-                .listener(new CaptchaListener() {
-                    @Override
-                    public void onReady() {
+        return langType;
+    }
 
-                    }
-
-                    @Override
-                    public void onValidate(String result, String validate, String msg) {
-                        if (!TextUtils.isEmpty(validate)) {
-                            callback.invoke(true);
-                        } else {
-                            WritableNativeMap map = new WritableNativeMap();
-                            map.putInt("code", -1001);
-                            map.putString("msg", msg);
-                            callback.invoke(false);
-                        }
-                    }
-
-                    @Override
-                    public void onError(int code, String msg) {
-                        WritableNativeMap map = new WritableNativeMap();
-                        map.putInt("code", code);
-                        map.putString("msg", msg);
-                        callback.invoke(false);
-                    }
-
-                    @Override
-                    public void onClose(Captcha.CloseType closeType) {
-                        WritableNativeMap map = new WritableNativeMap();
-                        if (closeType == Captcha.CloseType.USER_CLOSE) {
-                            map.putString("msg", "用户关闭验证码");
-                        } else if (closeType == Captcha.CloseType.VERIFY_SUCCESS_CLOSE) {
-                            map.putString("msg", "校验通过，流程自动关闭");
-                        } else if (closeType == Captcha.CloseType.TIP_CLOSE) {
-                            map.putString("msg", "loading关闭");
-                        }
-                        map.putInt("code", -1000);
-                        callback.invoke(false);
-                    }
-                }) // 验证码回调监听器
-                .timeout(1000 * 10) // 超时时间，一般无需设置
-                .languageType(langType) // 验证码语言类型，一般无需设置
-                .debug(true) // 是否启用debug模式，一般无需设置
-                // 设置验证码框的位置和宽度，一般无需设置，不推荐设置宽高，后面将逐步废弃该接口
-                .position(-1, -1, 0, 0)
-                .backgroundDimAmount(dimAmount) // 验证码框遮罩层透明度，一般无需设置
-                .touchOutsideDisappear(isTouchOutsideDisappear)  // 点击验证码框外部是否消失，默认为系统默认配置(消失)，设置false不消失
-                .useDefaultFallback(true) // 是否使用默认降级方案，默认开启
-                .failedMaxRetryCount(failedMaxRetryCount) // 当出现服务不可用时，尝试加载的最大次数，超过此次数仍然失败将触发降级，默认3次
-                .build(mContext);
-        final Captcha captcha = Captcha.getInstance().init(configuration);
-        captcha.validate();
-
+    private void sendEvent(String eventName, WritableMap event) {
+        mContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
+                eventName, event);
     }
 }
