@@ -1,6 +1,7 @@
 
 package com.netease.captcha;
 
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -22,8 +23,8 @@ public class RNCaptchaModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void init(ReadableMap map) {
-        captchaHelper.init(reactContext, map);
+    public void init(ReadableMap map, Callback callback) {
+        captchaHelper.init(getCurrentActivity(), reactContext, map, callback);
     }
 
     @ReactMethod
