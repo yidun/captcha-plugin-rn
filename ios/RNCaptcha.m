@@ -91,6 +91,8 @@ RCT_EXPORT_METHOD(init:(NSDictionary *)options)
                 } else {
                     self.manager.lang = NTESVerifyCodeLangCN;
                 }
+            } else {
+              self.manager.lang = NTESVerifyCodeLangCN;
             }
         }
          
@@ -112,7 +114,7 @@ RCT_EXPORT_METHOD(showCaptcha)
 
 - (NSArray<NSString *> *)supportedEvents
 {
-  return @[@"verifyCodeInitFailed", @"verifyCodeValidateFinish", @"verifyCodeCloseWindow", @"verifyCodeNetError"];
+  return @[@"onError", @"onSuccess", @"onCancel"];
 }
 
 /**
@@ -171,3 +173,4 @@ RCT_EXPORT_METHOD(showCaptcha)
 
 @end
   
+
