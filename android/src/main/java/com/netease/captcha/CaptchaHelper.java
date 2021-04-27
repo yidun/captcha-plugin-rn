@@ -22,13 +22,13 @@ public class CaptchaHelper {
     private Activity mActivity = null;
     private ReactContext context;
     private float dimAmount = 0.5f;
-    private boolean isTouchOutsideDisappear = false;
+    private boolean isTouchOutsideDisappear = true;
     private CaptchaConfiguration.LangType langType = CaptchaConfiguration.LangType.LANG_ZH_CN;
     private boolean isDebug = false;
     private String captcha_id;
-    private boolean is_sense_mode;//是否智能无感知
+    private boolean is_sense_mode = false;//是否智能无感知
     private boolean isHideCloseBtn = false;
-    private boolean useDefaultFallback = false;
+    private boolean useDefaultFallback = true;
     private int failedMaxRetryCount = 3;
     private int timeout = 1000 * 10;
 
@@ -39,10 +39,10 @@ public class CaptchaHelper {
         this.isDebug = map.hasKey("debug") && map.getBoolean("debug");
         this.is_sense_mode = map.hasKey("is_no_sense_mode") && map.getBoolean("is_no_sense_mode");
         this.dimAmount = map.hasKey("dimAmount") ? (float) map.getDouble("dimAmount") : 0.5f;
-        this.isTouchOutsideDisappear = map.hasKey("is_touch_outside_disappear") && map.getBoolean("is_touch_outside_disappear");
+        this.isTouchOutsideDisappear = !map.hasKey("is_touch_outside_disappear") || map.getBoolean("is_touch_outside_disappear");
         this.timeout = map.hasKey("timeout") ? map.getInt("timeout") : 1000 * 10;
         this.isHideCloseBtn = map.hasKey("is_hide_close_button") && map.getBoolean("is_hide_close_button");
-        this.useDefaultFallback = map.hasKey("use_default_fallback") && map.getBoolean("use_default_fallback");
+        this.useDefaultFallback = !map.hasKey("use_default_fallback") || map.getBoolean("use_default_fallback");
         this.failedMaxRetryCount = map.hasKey("failed_max_retry_count") ? map.getInt("failed_max_retry_count") : 3;
         if (map.hasKey("language_type") && !TextUtils.isEmpty("language_type")) {
             langType = string2LangType(map.getString("language_type"));
