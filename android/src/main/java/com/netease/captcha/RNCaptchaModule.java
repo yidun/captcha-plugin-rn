@@ -23,8 +23,8 @@ public class RNCaptchaModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void init(ReadableMap map, Callback callback) {
-        captchaHelper.init(getCurrentActivity(), reactContext, map, callback);
+    public void init(ReadableMap map) {
+        captchaHelper.init(getCurrentActivity(), reactContext, map);
     }
 
     @ReactMethod

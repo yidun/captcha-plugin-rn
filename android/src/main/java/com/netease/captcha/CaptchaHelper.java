@@ -32,7 +32,7 @@ public class CaptchaHelper {
     private int failedMaxRetryCount = 3;
     private int timeout = 1000 * 10;
 
-    public void init(Activity activity, ReactContext context, ReadableMap map, Callback callback) {
+    public void init(Activity activity, ReactContext context, ReadableMap map) {
         this.mActivity = activity;
         this.context = context;
         this.captcha_id = map.hasKey("captcha_id") ? map.getString("captcha_id") : "";
@@ -47,7 +47,6 @@ public class CaptchaHelper {
         if (map.hasKey("language_type") && !TextUtils.isEmpty("language_type")) {
             langType = string2LangType(map.getString("language_type"));
         }
-        callback.invoke(true);
     }
 
     public void showCaptcha() {
