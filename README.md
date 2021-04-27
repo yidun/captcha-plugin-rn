@@ -28,7 +28,9 @@ const captchaHelper = NativeModules.NTESCaptchaHelper;
 ```
 ## 验证码API说明
 
-### init({
+### init
+```js
+init({
     'captcha_id': '易盾获取到的id',
     'is_no_sense_mode': false, // 是否为智能无感知
     'language_type': 'zh-CN', // 多语言，默认中文
@@ -45,30 +47,31 @@ const captchaHelper = NativeModules.NTESCaptchaHelper;
         // TODO: 发生错误
       }
 })
+```
 *方法描述：*
 初始化
 *多语言对应表：*
-zh-TW:中文繁体
-en:英文
-ja:日语
-ko:韩文
-th:泰语
-vi:越南语
-fr:法语
-ru:俄语
-ar:阿拉伯语
-de:德语
-it:意大利语
-he:希伯来语
-hi:印地语
-id:印尼语
-my:缅甸语
-lo:老挝语
-ms:马来语
-pl:波兰语
-pt:葡萄牙语
-es:西班牙语
-tr:土耳其语
+- zh-TW:中文繁体
+- en:英文
+- ja:日语
+- ko:韩文
+- th:泰语
+- vi:越南语
+- fr:法语
+- ru:俄语
+- ar:阿拉伯语
+- de:德语
+- it:意大利语
+- he:希伯来语
+- hi:印地语
+- id:印尼语
+- my:缅甸语
+- lo:老挝语
+- ms:马来语
+- pl:波兰语
+- pt:葡萄牙语
+- es:西班牙语
+- tr:土耳其语
 
 ### showCaptcha()
 *方法描述：*
