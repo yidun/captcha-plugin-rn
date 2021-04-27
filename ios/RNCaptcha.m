@@ -112,15 +112,7 @@ RCT_EXPORT_METHOD(showCaptcha)
 
 - (NSArray<NSString *> *)supportedEvents
 {
-  return @[@"verifyCodeInitFinish", @"verifyCodeInitFailed", @"verifyCodeValidateFinish", @"verifyCodeCloseWindow", @"verifyCodeNetError"];
-}
-
-- (void)verifyCodeInitFinish{
-  NSLog(@"收到初始化完成的回调");
-  [self sendEventWithName:@"verifyCodeInitFinish" body:nil];
-  dispatch_async(dispatch_get_main_queue(), ^(){
-
-  });
+  return @[@"verifyCodeInitFailed", @"verifyCodeValidateFinish", @"verifyCodeCloseWindow", @"verifyCodeNetError"];
 }
 
 /**
@@ -130,7 +122,7 @@ RCT_EXPORT_METHOD(showCaptcha)
  */
 - (void)verifyCodeInitFailed:(NSString *)message{
   NSLog(@"收到初始化失败的回调:%@",message);
-  [self sendEventWithName:@"verifyCodeInitFailed" body:@{@"message": message}];
+  [self sendEventWithName:@"onError" body:@{@"message": message}];
   dispatch_async(dispatch_get_main_queue(), ^(){
  
   });
@@ -146,7 +138,7 @@ RCT_EXPORT_METHOD(showCaptcha)
  */
 - (void)verifyCodeValidateFinish:(BOOL)result validate:(NSString *)validate message:(NSString *)message{
   NSLog(@"收到验证结果的回调:(%d,%@,%@)", result, validate, message);
-  [self sendEventWithName:@"verifyCodeValidateFinish" body:@{@"result": @(result), @"validate": validate, @"message": message}];
+  [self sendEventWithName:@"onSuccess" body:@{@"result": @(result), @"validate": validate, @"message": message}];
   dispatch_async(dispatch_get_main_queue(), ^(){
     
   });
@@ -157,7 +149,7 @@ RCT_EXPORT_METHOD(showCaptcha)
  */
 - (void)verifyCodeCloseWindow{
   NSLog(@"收到关闭验证码视图的回调");
-  [self sendEventWithName:@"verifyCodeCloseWindow" body:nil];
+  [self sendEventWithName:@"onCancel" body:@{@"message": @"关闭验证码视图"}];
   dispatch_async(dispatch_get_main_queue(), ^(){
     
   });
@@ -169,8 +161,9 @@ RCT_EXPORT_METHOD(showCaptcha)
  * @param error 网络错误信息
  */
 - (void)verifyCodeNetError:(NSError *)error{
+  NSString *message = [error localizedDescription];
   NSLog(@"收到网络错误的回调:%@(%ld)", [error localizedDescription], (long)error.code);
-  [self sendEventWithName:@"verifyCodeNetError" body:@{@"error": error}];
+  [self sendEventWithName:@"onError" body:@{@"message": message,@"code":@(error.code)}];
   dispatch_async(dispatch_get_main_queue(), ^(){
    
   });
