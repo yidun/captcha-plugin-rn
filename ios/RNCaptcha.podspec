@@ -11,12 +11,13 @@ Pod::Spec.new do |s|
   # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
   s.author             = { "author" => "author@domain.cn" }
   s.platform     = :ios, "7.0"
-  s.source       = { :git => "https://github.com/author/RNCaptcha.git", :tag => "master" }
+  s.source       = { :git => "https://github.com/yidun/captcha-plugin-rn.git", :tag => "master" }
   s.source_files  = "RNCaptcha/**/*.{h,m}"
   s.requires_arc = true
 
 
   s.dependency "React"
+  s.dependency "NTESVerifyCode"
   #s.dependency "others"
 
 end
