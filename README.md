@@ -72,7 +72,7 @@ init({
 显示验证码弹窗
 
 ### 事件监听，使用的是react-native的event发送事件
-*导入DeviceEventEmitter：*
+*导入NativeEventEmitter：*
 ```js
 import {NativeEventEmitter} from 'react-native'
 const NTESRNRouterEmitter = new  NativeEventEmitter(NativeModules.NTESCaptchaHelper)
