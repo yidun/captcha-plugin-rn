@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/yidun/captcha-plugin-rn.git", :tag => "master" }
   s.source_files  = "**/**/*.{h,m}"
   s.requires_arc = true
-
+  s.static_framework = true
 
   s.dependency "React"
   s.dependency "NTESVerifyCode"
