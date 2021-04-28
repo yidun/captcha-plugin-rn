@@ -7,10 +7,6 @@
 npm install --save https://github.com/yidun/captcha-react-native
 react-native link react-native-captcha
 ```
-也可以直接使用
-```
-npm install react-native-captcha
-```
 
 ## 配置依赖(Android必须)
 在react-native工程对应的android/app/build.gradle 文件的android域中添加
