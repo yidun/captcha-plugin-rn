@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "RNCaptcha"
-  s.version      = "1.0.0"
+  s.version      = "1.0.1"
   s.summary      = "RNCaptcha"
   s.description  = <<-DESC
                   RNCaptcha
@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.author             = { "author" => "author@domain.cn" }
   s.platform     = :ios, "7.0"
   s.source       = { :git => "https://github.com/yidun/captcha-plugin-rn.git", :tag => "master" }
-  s.source_files  = "RNCaptcha/**/*.{h,m}"
+  s.source_files  = "**/**/*.{h,m}"
   s.requires_arc = true
 
 
