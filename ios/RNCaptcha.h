@@ -5,7 +5,9 @@
 #import <React/RCTBridgeModule.h>
 #endif
 
-@interface RNCaptcha : NSObject <RCTBridgeModule>
+#import <React/RCTEventEmitter.h>
+@interface RNCaptcha : RCTEventEmitter <RCTBridgeModule>
 
 @end
   
+
