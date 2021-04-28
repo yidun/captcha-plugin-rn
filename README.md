@@ -4,7 +4,7 @@
 
 ## 导入插件
 ```
-npm install --save https://github.com/yidun/captcha-react-native
+npm install --save https://github.com/yidun/captcha-plugin-rn
 react-native link react-native-captcha
 ```
 
