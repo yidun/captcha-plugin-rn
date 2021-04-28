@@ -28,7 +28,7 @@ const captchaHelper = NativeModules.NTESCaptchaHelper;
 ```
 ## 验证码API说明
 
-### init
+### init()
 ```js
 init({
     'captcha_id': '易盾获取到的id',
@@ -40,16 +40,10 @@ init({
     'is_hide_close_button': false,//是否隐藏关闭按钮
     'use_default_fallback': true,//是否使用默认降级方案，默认开启
     'failed_max_retry_count': 3//当出现服务不可用时，尝试加载的最大次数，超过此次数仍然失败将触发降级，默认3次
-},(result)=>{
-    if (result.validate) {
-        // TODO: 初始化成功
-      } else {
-        // TODO: 发生错误
-      }
 })
 ```
 *方法描述：*
-初始化
+初始化<br/>
 *多语言对应表：*
 - zh-TW:中文繁体
 - en:英文
@@ -80,25 +74,26 @@ init({
 ### 事件监听，使用的是react-native的event发送事件
 *导入DeviceEventEmitter：*
 ```js
-import {DeviceEventEmitter} from 'react-native'
+import {NativeEventEmitter} from 'react-native'
+const NTESRNRouterEmitter = new  NativeEventEmitter(NativeModules.NTESCaptchaHelper)
 ```
 总共三种事件
 - 验证成功 onSuccess
 ```js
-this.onSuccess = DeviceEventEmitter.addListener('onSuccess', (event) => {
+this.onSuccess = NTESRNRouterEmitter.addListener('onSuccess', (event) => {
 			alert(event.validate);
 		});
 ```
 - 失败 onError
 ```js
-this.onError = DeviceEventEmitter.addListener('onError', (event) => {
+this.onError = NTESRNRouterEmitter.addListener('onError', (event) => {
             alert(event.code);
 			alert(event.message);
 		});
 ```
 - 取消 onCancel
 ```js
-this.onCancel = DeviceEventEmitter.addListener('onCancel', (event) => {
+this.onCancel = NTESRNRouterEmitter.addListener('onCancel', (event) => {
 			alert(event.message);
 		});
 ```
