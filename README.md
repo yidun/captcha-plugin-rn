@@ -5,15 +5,18 @@
 ## 导入插件
 ```
 npm install --save https://github.com/yidun/captcha-plugin-rn
-react-native link react-native-captcha
+react-native link @yidun/captcha-plugin-rn
 ```
-
+也可以直接使用
+```
+npm install @yidun/captcha-plugin-rn
+```
 ## 配置依赖(Android必须)
 在react-native工程对应的android/app/build.gradle 文件的android域中添加
 ```
  repositories {
         flatDir {
-            dirs project(':react-native-captcha').file('libs')
+            dirs project(':yidun_captcha-plugin-rn').file('libs')
         }
     }
 ```
