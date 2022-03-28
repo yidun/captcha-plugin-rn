@@ -4,7 +4,7 @@
 ## 平台支持（兼容性）
   | Android|iOS|  
   | ---- | ----- |
-  | 适用版本区间：4.4 - 11.0|适用版本区间：9 - 14| 
+  | 适用版本区间：4.4 - 13.0|适用版本区间：9 - 14| 
 
 ## 环境准备
 
@@ -16,16 +16,6 @@ npm install @yidun/captcha-plugin-rn
 ```
 
 ### 项目开发配置
-
-#### Android 配置
-在 react-native 工程对应的 android/app/build.gradle 文件的 android 域中添加
-```
-repositories {
-    flatDir {
-        dirs project(':yidun_captcha-plugin-rn').file('libs')
-    }
-}
-```
 
 ## 调用示例
 
@@ -79,6 +69,7 @@ captchaHelper.init(options)
 | use_default_fallback | Boolean| 否 | true | 是否采用默认降级 |
 | failed_max_retry_count | Number | 否 | 3 | 失败后尝试最大次数 |
 | language_type | String | 否 | zh-CN | 多语言语言类型 |
+| loading_text | String | 否 | 智能检测中 | 自定义加载文案 |
 
 ###### language_type 多语言对应表
 
