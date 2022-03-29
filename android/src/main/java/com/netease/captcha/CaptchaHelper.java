@@ -24,7 +24,7 @@ public class CaptchaHelper {
     private ReactContext context;
     private float dimAmount = 0.5f;
     private boolean isTouchOutsideDisappear = true;
-    private LangType langType = LangType.LANG_ZH_CN;
+    private String langType;
     private Theme theme = Theme.LIGHT;
     private boolean isDebug = false;
     private String captcha_id;
@@ -49,7 +49,7 @@ public class CaptchaHelper {
         this.useDefaultFallback = !map.hasKey("use_default_fallback") || map.getBoolean("use_default_fallback");
         this.failedMaxRetryCount = map.hasKey("failed_max_retry_count") ? map.getInt("failed_max_retry_count") : 3;
         if (map.hasKey("language_type") && !TextUtils.isEmpty(map.getString("language_type"))) {
-            this.langType = string2LangType(map.getString("language_type"));
+            this.langType = map.getString("language_type");
         }
         if (map.hasKey("theme") && !TextUtils.isEmpty(map.getString("theme"))) {
             this.theme = map.getString("theme").equals("light") ? Theme.LIGHT : Theme.DARK;
@@ -85,9 +85,7 @@ public class CaptchaHelper {
                             event.putString("validate", validate);
                             sendEvent("onSuccess", event);
                         } else {
-                            event.putInt("code", -1001);
-                            event.putString("message", msg);
-                            sendEvent("onError", event);
+                            Log.d(TAG, "验证失败:" + msg);
                         }
                     }
 
@@ -112,7 +110,6 @@ public class CaptchaHelper {
                         sendEvent("onCancel", event);
                     }
                 })
-                .languageType(langType)
                 .debug(isDebug)
                 .timeout(timeout)
                 .backgroundDimAmount(dimAmount)
@@ -120,6 +117,9 @@ public class CaptchaHelper {
                 .useDefaultFallback(useDefaultFallback)
                 .hideCloseButton(isHideCloseBtn)
                 .touchOutsideDisappear(isTouchOutsideDisappear);
+        if (!TextUtils.isEmpty(langType)) {
+            build.languageType(string2LangType(langType));
+        }
         if (isNoSenseMode) {
             build.mode(CaptchaConfiguration.ModeType.MODE_INTELLIGENT_NO_SENSE);
         }

@@ -36,7 +36,7 @@ class Demo extends Component {
                 <Button onPress={() => captchaHelper.init({
                     captcha_id: '易盾获取到的业务id',
                     is_no_sense_mode: false
-                 }} title="初始化"/>
+                 })} title="初始化"/>
                 <Button onPress={() => captchaHelper.showCaptcha()} title="显示验证码"/>
             </SafeAreaView>
         )
