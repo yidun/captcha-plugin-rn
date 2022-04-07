@@ -88,6 +88,116 @@ RCT_EXPORT_METHOD(init:(NSDictionary *)options)
                     self.manager.lang = NTESVerifyCodeLangES;
                 } else if ([language_type isEqualToString:@"tr"]) {
                     self.manager.lang = NTESVerifyCodeLangTR;
+                } else if ([language_type isEqualToString:@"nl"]) {
+                    self.manager.lang = NTESVerifyCodeLangNL;
+                } else if ([language_type isEqualToString:@"es-la"]) {
+                    self.manager.lang = NTESVerifyCodeLangESLA;
+                } else if ([language_type isEqualToString:@"pt-br"]) {
+                    self.manager.lang = NTESVerifyCodeLangPTBR;
+                } else if ([language_type isEqualToString:@"sv"]) {
+                    self.manager.lang = NTESVerifyCodeLangSV;
+                } else if ([language_type isEqualToString:@"no"]) {
+                    self.manager.lang = NTESVerifyCodeLangNN;
+                } else if ([language_type isEqualToString:@"da"]) {
+                    self.manager.lang = NTESVerifyCodeLangDA;
+                } else if ([language_type isEqualToString:@"cs"]) {
+                    self.manager.lang = NTESVerifyCodeLangCS;
+                } else if ([language_type isEqualToString:@"hu"]) {
+                    self.manager.lang = NTESVerifyCodeLangHU;
+                } else if ([language_type isEqualToString:@"sk"]) {
+                    self.manager.lang = NTESVerifyCodeLangSK;
+                } else if ([language_type isEqualToString:@"ro"]) {
+                    self.manager.lang = NTESVerifyCodeLangRO;
+                } else if ([language_type isEqualToString:@"el"]) {
+                    self.manager.lang = NTESVerifyCodeLangEL;
+                } else if ([language_type isEqualToString:@"sr"]) {
+                    self.manager.lang = NTESVerifyCodeLangSR;
+                } else if ([language_type isEqualToString:@"bs"]) {
+                    self.manager.lang = NTESVerifyCodeLangBS;
+                } else if ([language_type isEqualToString:@"mk"]) {
+                    self.manager.lang = NTESVerifyCodeLangMK;
+                } else if ([language_type isEqualToString:@"bg"]) {
+                    self.manager.lang = NTESVerifyCodeLangBG;
+                } else if ([language_type isEqualToString:@"fi"]) {
+                    self.manager.lang = NTESVerifyCodeLangFI;
+                } else if ([language_type isEqualToString:@"et"]) {
+                    self.manager.lang = NTESVerifyCodeLangET;
+                } else if ([language_type isEqualToString:@"lv"]) {
+                    self.manager.lang = NTESVerifyCodeLangLV;
+                } else if ([language_type isEqualToString:@"lt"]) {
+                    self.manager.lang = NTESVerifyCodeLangLT;
+                } else if ([language_type isEqualToString:@"sl"]) {
+                    self.manager.lang = NTESVerifyCodeLangSL;
+                } else if ([language_type isEqualToString:@"hr"]) {
+                    self.manager.lang = NTESVerifyCodeLangHR;
+                } else if ([language_type isEqualToString:@"uk"]) {
+                    self.manager.lang = NTESVerifyCodeLangUK;
+                } else if ([language_type isEqualToString:@"vi"]) {
+                    self.manager.lang = NTESVerifyCodeLangVT;
+                } else if ([language_type isEqualToString:@"fa"]) {
+                    self.manager.lang = NTESVerifyCodeLangFA;
+                } else if ([language_type isEqualToString:@"ca"]) {
+                    self.manager.lang = NTESVerifyCodeLangCA;
+                } else if ([language_type isEqualToString:@"gl"]) {
+                    self.manager.lang = NTESVerifyCodeLangGL;
+                } else if ([language_type isEqualToString:@"eu"]) {
+                    self.manager.lang = NTESVerifyCodeLangEU;
+                } else if ([language_type isEqualToString:@"ka"]) {
+                    self.manager.lang = NTESVerifyCodeLangKA;
+                } else if ([language_type isEqualToString:@"az"]) {
+                    self.manager.lang = NTESVerifyCodeLangAZ;
+                } else if ([language_type isEqualToString:@"uz"]) {
+                    self.manager.lang = NTESVerifyCodeLangUZ;
+                } else if ([language_type isEqualToString:@"km"]) {
+                    self.manager.lang = NTESVerifyCodeLangKM;
+                } else if ([language_type isEqualToString:@"si"]) {
+                    self.manager.lang = NTESVerifyCodeLangSI;
+                } else if ([language_type isEqualToString:@"ur"]) {
+                    self.manager.lang = NTESVerifyCodeLangUR;
+                } else if ([language_type isEqualToString:@"bo"]) {
+                    self.manager.lang = NTESVerifyCodeLangBO;
+                } else if ([language_type isEqualToString:@"be"]) {
+                    self.manager.lang = NTESVerifyCodeLangBE;
+                } else if ([language_type isEqualToString:@"kk"]) {
+                    self.manager.lang = NTESVerifyCodeLangKK;
+                } else if ([language_type isEqualToString:@"bn"]) {
+                    self.manager.lang = NTESVerifyCodeLangBN;
+                } else if ([language_type isEqualToString:@"fil"]) {
+                    self.manager.lang = NTESVerifyCodeLangFIL;
+                } else if ([language_type isEqualToString:@"jv"]) {
+                    self.manager.lang = NTESVerifyCodeLangJV;
+                } else if ([language_type isEqualToString:@"ne"]) {
+                    self.manager.lang = NTESVerifyCodeLangNE;
+                } else if ([language_type isEqualToString:@"sw"]) {
+                    self.manager.lang = NTESVerifyCodeLangSW;
+                } else if ([language_type isEqualToString:@"mi"]) {
+                    self.manager.lang = NTESVerifyCodeLangMI;
+                } else if ([language_type isEqualToString:@"am"]) {
+                    self.manager.lang = NTESVerifyCodeLangAM;
+                } else if ([language_type isEqualToString:@"te"]) {
+                    self.manager.lang = NTESVerifyCodeLangTE;
+                } else if ([language_type isEqualToString:@"mr"]) {
+                    self.manager.lang = NTESVerifyCodeLangMR;
+                } else if ([language_type isEqualToString:@"ta"]) {
+                    self.manager.lang = NTESVerifyCodeLangTA;
+                } else if ([language_type isEqualToString:@"gu"]) {
+                    self.manager.lang = NTESVerifyCodeLangGU;
+                } else if ([language_type isEqualToString:@"kn"]) {
+                    self.manager.lang = NTESVerifyCodeLangKN;
+                } else if ([language_type isEqualToString:@"ml"]) {
+                    self.manager.lang = NTESVerifyCodeLangML;
+                } else if ([language_type isEqualToString:@"or"]) {
+                    self.manager.lang = NTESVerifyCodeLangOR;
+                } else if ([language_type isEqualToString:@"pa"]) {
+                    self.manager.lang = NTESVerifyCodeLangPA;
+                } else if ([language_type isEqualToString:@"as"]) {
+                    self.manager.lang = NTESVerifyCodeLangAS;
+                } else if ([language_type isEqualToString:@"mai"]) {
+                    self.manager.lang = NTESVerifyCodeLangMAI;
+                } else if ([language_type isEqualToString:@"mn"]) {
+                    self.manager.lang = NTESVerifyCodeLangMN;
+                } else if ([language_type isEqualToString:@"ug"]) {
+                    self.manager.lang = NTESVerifyCodeLangUG;
                 } else {
                     self.manager.lang = NTESVerifyCodeLangCN;
                 }
