@@ -60,6 +60,7 @@ captchaHelper.init(options)
 | key | value 类型 | 是否必填 | 默认值 | 描述 |
 | ---- | ---- | -------- |------| ---- |
 | captcha_id | String | 是 | 无 | 易盾获取到的业务 id |
+| failed_max_retry_count | Number | 是 | 无 | 失败后尝试最大次数 |
 | debug | Boolean | 否 | false | 是否启动 debug 模式 |
 | is_no_sense_mode | Boolean | 否 | false | 是否为智能无感知 |
 | dimAmount | Number | 否 | 0.5 | 验证码框遮罩层透明度 |
@@ -67,7 +68,6 @@ captchaHelper.init(options)
 | timeout | Number | 否 | 10000 | 超时时间 |
 | is_hide_close_button | Boolean | 否 | false | 是否隐藏关闭按钮 |
 | use_default_fallback | Boolean| 否 | true | 是否采用默认降级 |
-| failed_max_retry_count | Number | 否 | 3 | 失败后尝试最大次数 |
 | language_type | String | 否 | zh-CN | 多语言语言类型 |
 | loading_text | String | 否 | 智能检测中 | 自定义加载文案 |
 
