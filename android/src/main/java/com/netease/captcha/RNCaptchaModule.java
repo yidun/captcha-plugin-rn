@@ -37,4 +37,16 @@ public class RNCaptchaModule extends ReactContextBaseJavaModule {
             });
         }
     }
+
+    @ReactMethod
+    public void destroyCaptcha() {
+        if (getCurrentActivity() != null) {
+            getCurrentActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    captchaHelper.destroy();
+                }
+            });
+        }
+    }
 }

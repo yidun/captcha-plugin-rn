@@ -1,7 +1,7 @@
 
 {
   "name": "@yidun/captcha-plugin-rn",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "yidun captcha detect cordova plugin",
   "main": "index.js",
   "scripts": {

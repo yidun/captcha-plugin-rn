@@ -61,7 +61,7 @@ captchaHelper.init(options)
 | ---- | ---- | -------- |------| ---- |
 | captcha_id | String | 是 | 无 | 易盾获取到的业务 id |
 | failed_max_retry_count | Number | 是 | 无 | 失败后尝试最大次数 |
-| debug | Boolean | 否 | false | 是否启动 debug 模式 |
+| is_debug | Boolean | 否 | false | 是否启动 debug 模式 |
 | is_no_sense_mode | Boolean | 否 | false | 是否为智能无感知 |
 | dimAmount | Number | 否 | 0.5 | 验证码框遮罩层透明度 |
 | is_touch_outside_disappear | Boolean | 否 | true | 点击弹窗外部是否可以关闭验证码 |
@@ -70,6 +70,10 @@ captchaHelper.init(options)
 | use_default_fallback | Boolean| 否 | true | 是否采用默认降级 |
 | language_type | String | 否 | zh-CN | 多语言语言类型 |
 | loading_text | String | 否 | 智能检测中 | 自定义加载文案 |
+| theme | String | 否 | light | 主题/dark、light两种 |
+| is_show_loading | Boolean | 否 | true | 是否显示loading |
+| is_close_button_bottom | Boolean | 否 | false | 关闭按钮是否在下方 |
+| styleConfig | object/ReadableMap | 否 | 空 | 验证码高级UI自定义配置 |
 
 ###### language_type 多语言对应表
 
@@ -152,6 +156,44 @@ captchaHelper.init(options)
 | mn | 蒙古语（西里尔文）     |
 | ug | 维吾尔语     |
 
+###### styleConfig 验证码UI自定义配置对应表
+
+| UI配置项 | 类型 | 描述 |
+| ------ |----| ---- |
+| radius |int |验证码圆角|
+| capBarTextAlign |String |弹框头部标题文字对齐方式，可选值为 left center right|
+| capBarBorderColor |String |弹框头部下边框颜色，想要去掉的话可取 transparent 或者与背景色同色 #fff|
+| capBarTextColor |String |弹框头部标题文字颜色|
+| capBarTextSize |int |弹框头部标题文字字体大小|
+| capBarTextWeight |String | 弹框头部标题文字字体体重，可设置粗细，参考：capBarTextWeight: normal、bold、lighter、bolder、100、200、300、400、500、600、700、800、900更多详情参考：https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight|
+| capBarTitleHeight |int |弹框头部标题所在容器高度|
+| capBodyPadding |int |验证码弹框 body 部分的内边距，相当于总体设置 capPaddingTop，capPaddingRight，capPaddingBottom，capPaddingLeft|
+| capPaddingTop |int |验证码弹框 body 部分的【上】内边距，覆盖 capPadding 对于上内边距的设置,单位px|
+| capPaddingRight |int |验证码弹框 body 部分的【右】内边距，覆盖 capPadding 对于右内边距的设置,单位px|
+| capPaddingBottom |int |验证码弹框 body 部分的【底】内边距，覆盖 capPadding 对于底内边距的设置,单位px|
+| capPaddingLeft |int |验证码弹框 body 部分的【左】内边距，覆盖 capPadding 对于左内边距的设置,单位px|
+| paddingTop |int |弹框【上】内边距，实践时候可与 capPaddingTop 配合,单位px|
+| paddingBottom |int |弹框【下】内边距，实践时候可与 capPaddingBottom 配合,单位px|
+| capBorderRadius |int |验证码弹框body圆角|
+| borderColor |String |滑块的边框颜色|
+| background |String |滑块的背景颜色|
+| borderColorMoving |String |滑块的滑动时边框颜色，滑动类型验证码下有效|
+| backgroundMoving |String |滑块的滑动时背景颜色，滑动类型验证码下有效|
+| borderColorSuccess |String |滑块的成功时边框颜色，此颜色同步了文字成功时文字颜色、滑块背景颜色|
+| backgroundSuccess |String |滑块的成功时背景颜色|
+| backgroundError |String |滑块的失败时背景颜色|
+| borderColorError |String |失败时边框颜色|
+| slideBackground |String |滑块的滑块背景颜色|
+| textSize |int |滑块的内容文本大小|
+| textColor |String |滑块内容文本颜色（滑块滑动前的颜色，失败、成功前的颜色）|
+| height |int |滑块的高度|
+| borderRadius |int |滑滑块的圆角|
+| gap |String |滑块与验证码视图之间的距离,单位px|
+| executeBorderRadius |int |组件圆角大小|
+| executeBackground |String |组件背景色|
+| executeTop |String |组件外层容器距离组件顶部距离,单位px|
+| executeRight |String |组件外层容器距离组件右侧距离,单位px|
+
 ### 2. 显示验证码
 
 #### 代码说明：
@@ -170,12 +212,22 @@ const NTESRNRouterEmitter = new  NativeEventEmitter(NativeModules.NTESCaptchaHel
 
 然后添加事件监听，总共三种事件
 
+- 验证码弹窗准备完成 onLoaded
+
+```
+NTESRNRouterEmitter.addListener('onLoaded', (event) => {
+    
+});
+```
+
 - 验证成功回调 onSuccess
 
 ```
 NTESRNRouterEmitter.addListener('onSuccess', (event) => {
       // validate：返回的结果码
       alert(event.validate);
+      alert(event.result);
+      alert(event.message);
 });
 ```
 
@@ -192,7 +244,7 @@ NTESRNRouterEmitter.addListener('onError', (event) => {
 - 取消验证码回调 onCancel
 
 ```
-NTESRNRouterEmitter.addListener('onCancel', (event) => {
+NTESRNRouterEmitter.addListener('onClose', (event) => {
       //message：取消的具体场景
       alert(event.message);
 });

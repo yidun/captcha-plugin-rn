@@ -39,6 +39,6 @@ repositories {
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
-    implementation 'io.github.yidun:captcha:3.3.6.1'
+    implementation 'io.github.yidun:captcha:3.4.0.1'
 }
   
