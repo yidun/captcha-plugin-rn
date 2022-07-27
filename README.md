@@ -4,7 +4,7 @@
 ## 平台支持（兼容性）
   | Android|iOS|  
   | ---- | ----- |
-  | 适用版本区间：4.4 - 13.0|适用版本区间：9 - 14| 
+  | 适用版本区间：4.4 - 13.0|适用版本区间：9以上| 
 
 ## 环境准备
 
@@ -36,6 +36,12 @@ class Demo extends Component {
                 <Button onPress={() => captchaHelper.init({
                     captcha_id: '易盾获取到的业务id',
                     is_no_sense_mode: false
+                     styleConfig:{
+                        radius: 10,
+                        capBarTextColor: "#25D4D0",
+                        capBarTextSize: 18,
+                        capBarTextWeight: "bold",
+                     }
                  })} title="初始化"/>
                 <Button onPress={() => captchaHelper.showCaptcha()} title="显示验证码"/>
             </SafeAreaView>
