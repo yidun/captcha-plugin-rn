@@ -332,9 +332,9 @@ RCT_EXPORT_METHOD(destroyCaptcha)
 - (void)verifyCodeCloseWindow:(NTESVerifyCodeClose)close {
     NSString *msg = @"";
     if (close == NTESVerifyCodeCloseAuto) {
-        msg = @"auto"
+        msg = @"auto";
     } else {
-        msg = @"manual"
+        msg = @"manual";
     }
   NSLog(@"收到关闭验证码视图的回调");
   [self sendEventWithName:@"onClose" body:@{@"message": msg?:@""}];
@@ -359,4 +359,5 @@ RCT_EXPORT_METHOD(destroyCaptcha)
 
 @end
   
+
 
