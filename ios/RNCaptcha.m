@@ -40,7 +40,59 @@ RCT_EXPORT_METHOD(init:(NSDictionary *)options)
             self.manager.openFallBack = use_default_fallback;
             self.manager.closeButtonHidden = is_hide_close_button;
             self.manager.shouldCloseByTouchBackground = is_touch_outside_disappear;
-            [self.manager configureVerifyCode:captchaid timeout:timeout];
+            
+            NSDictionary *styleConfig = [options objectForKey:@"styleConfig"];
+            if (styleConfig) {
+                NTESVerifyCodeStyleConfig *config = [[NTESVerifyCodeStyleConfig alloc] init];
+                config.radius = [[styleConfig objectForKey:@"radius"] intValue];
+                
+                NSString *capBarTextAlign = [styleConfig objectForKey:@"capBarTextAlign"];
+                if ([@"left" isEqualToString:capBarTextAlign]) {
+                    config.capBarTextAlign = NTESCapBarTextAlignLeft;
+                } else if ([@"right" isEqualToString:capBarTextAlign]) {
+                    config.capBarTextAlign = NTESCapBarTextAlignRight;
+                } else {
+                    config.capBarTextAlign = NTESCapBarTextAlignCenter;
+                }
+                config.capBarBorderColor = [styleConfig objectForKey:@"capBarBorderColor"];
+                config.capBarTextColor = [styleConfig objectForKey:@"capBarTextColor"];
+                config.capBarTextSize = [[styleConfig objectForKey:@"capBarTextSize"] intValue];
+                config.capBarTextWeight = [styleConfig objectForKey:@"capBarTextWeight"];
+                config.capBarTitleHeight = [[styleConfig objectForKey:@"capBarTitleHeight"] intValue];
+                config.capBodyPadding = [[styleConfig objectForKey:@"capBodyPadding"] intValue];
+                
+                config.capPaddingTop = [NSString stringWithFormat:@"%@",[styleConfig objectForKey:@"capPaddingTop"]] ;
+                config.capPaddingRight = [NSString stringWithFormat:@"%@",[styleConfig objectForKey:@"capPaddingRight"]] ;
+                config.capPaddingBottom = [NSString stringWithFormat:@"%@",[styleConfig objectForKey:@"capPaddingBottom"]] ;
+                config.capPaddingLeft = [NSString stringWithFormat:@"%@",[styleConfig objectForKey:@"capPaddingLeft"]];
+                config.paddingTop = [NSString stringWithFormat:@"%@",[styleConfig objectForKey:@"paddingTop"]];
+                config.paddingBottom = [NSString stringWithFormat:@"%@",[styleConfig objectForKey:@"paddingBottom"]];
+                
+                
+                config.capBorderRadius = [[styleConfig objectForKey:@"capBorderRadius"] intValue];
+                config.borderColor = [styleConfig objectForKey:@"borderColor"];
+                config.background = [styleConfig objectForKey:@"background"];
+                config.borderColorMoving = [styleConfig objectForKey:@"borderColorMoving"];
+                config.backgroundMoving = [styleConfig objectForKey:@"backgroundMoving"];
+                config.borderColorSuccess = [styleConfig objectForKey:@"borderColorSuccess"];
+                config.backgroundSuccess = [styleConfig objectForKey:@"backgroundSuccess"];
+                config.backgroundError = [styleConfig objectForKey:@"backgroundError"];
+                config.borderColorError = [styleConfig objectForKey:@"borderColorError"];
+                config.slideBackground = [styleConfig objectForKey:@"slideBackground"];
+                config.textSize = [[styleConfig objectForKey:@"textSize"] intValue];
+                config.textColor = [styleConfig objectForKey:@"textColor"];
+                config.height = [[styleConfig objectForKey:@"height"] intValue];
+                config.borderRadius = [[styleConfig objectForKey:@"borderRadius"] intValue];
+                config.gap = [styleConfig objectForKey:@"gap"];
+                
+                config.executeBorderRadius = [[styleConfig objectForKey:@"executeBorderRadius"] intValue];
+                config.executeBackground = [styleConfig objectForKey:@"executeBackground"];
+                config.executeTop = [styleConfig objectForKey:@"executeTop"];
+                config.executeRight = [styleConfig objectForKey:@"executeRight"];
+                [self.manager configureVerifyCode:captchaid timeout:timeout styleConfig:config];
+            } else {
+                [self.manager configureVerifyCode:captchaid timeout:timeout];
+            }
             if (dimAmount != 0.0) {
                 self.manager.alpha = dimAmount;
             }
@@ -222,10 +274,28 @@ RCT_EXPORT_METHOD(showCaptcha)
   });
 }
 
+RCT_EXPORT_METHOD(destroyCaptcha)
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+      [self.manager closeVerifyCodeView];
+  });
+}
+
 - (NSArray<NSString *> *)supportedEvents
 {
-  return @[@"onError", @"onSuccess", @"onCancel"];
+  return @[@"onLoaded", @"onError", @"onSuccess", @"onClose"];
 }
+
+/**
+ * 验证码组件初始化完成
+ */
+- (void)verifyCodeInitFinish {
+    [self sendEventWithName:@"onLoaded" body:@{}];
+    dispatch_async(dispatch_get_main_queue(), ^(){
+   
+    });
+}
+
 
 /**
  * 验证码组件初始化出错
@@ -234,7 +304,7 @@ RCT_EXPORT_METHOD(showCaptcha)
  */
 - (void)verifyCodeInitFailed:(NSString *)message{
   NSLog(@"收到初始化失败的回调:%@",message);
-  [self sendEventWithName:@"onError" body:@{@"message": message}];
+  [self sendEventWithName:@"onError" body:@{@"message": message,@"code":@(0)}];
   dispatch_async(dispatch_get_main_queue(), ^(){
  
   });
@@ -250,7 +320,7 @@ RCT_EXPORT_METHOD(showCaptcha)
  */
 - (void)verifyCodeValidateFinish:(BOOL)result validate:(NSString *)validate message:(NSString *)message{
   NSLog(@"收到验证结果的回调:(%d,%@,%@)", result, validate, message);
-  [self sendEventWithName:@"onSuccess" body:@{@"result": @(result), @"validate": validate, @"message": message}];
+    [self sendEventWithName:@"onSuccess" body:@{@"result": @(result), @"validate": validate, @"message": message?:@""}];
   dispatch_async(dispatch_get_main_queue(), ^(){
     
   });
@@ -259,9 +329,15 @@ RCT_EXPORT_METHOD(showCaptcha)
 /**
  * 关闭验证码窗口后的回调
  */
-- (void)verifyCodeCloseWindow{
+- (void)verifyCodeCloseWindow:(NTESVerifyCodeClose)close {
+    NSString *msg = @"";
+    if (close == NTESVerifyCodeCloseAuto) {
+        msg = @"auto"
+    } else {
+        msg = @"manual"
+    }
   NSLog(@"收到关闭验证码视图的回调");
-  [self sendEventWithName:@"onCancel" body:@{@"message": @"关闭验证码视图"}];
+  [self sendEventWithName:@"onClose" body:@{@"message": msg?:@""}];
   dispatch_async(dispatch_get_main_queue(), ^(){
     
   });
