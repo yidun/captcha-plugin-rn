@@ -85,8 +85,11 @@ captchaHelper.init(options)
 
 | 多语言值 | 说明 |
 | ---- | ---- |
-| zh-TW | 中文繁体 |
-| en | 英文 |
+| zh-CN | 中文 |
+| zh-TW | 台湾繁体 |
+| zh-HK | 香港繁体 |
+| en-GB | 英式英文 |
+| en-US | 美式英文 |
 | ja | 日语 |
 | ko | 韩文 |
 | th | 泰语 |

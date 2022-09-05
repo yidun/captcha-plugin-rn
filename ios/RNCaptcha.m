@@ -100,8 +100,14 @@ RCT_EXPORT_METHOD(init:(NSDictionary *)options)
             if ([language_type isKindOfClass:[NSString class]]) {
                 if ([language_type isEqualToString:@"zh-TW"]) {
                     self.manager.lang = NTESVerifyCodeLangTW;
-                } else if ([language_type isEqualToString:@"en"]) {
-                    self.manager.lang = NTESVerifyCodeLangEN;
+                } else if ([language_type isEqualToString:@"zh-CN"]) {
+                    self.manager.lang = NTESVerifyCodeLangCN;
+                } else if ([language_type isEqualToString:@"zh-HK"]) {
+                    self.manager.lang = NTESVerifyCodeLangHK;
+                } else if ([language_type isEqualToString:@"en-US"]) {
+                    self.manager.lang = NTESVerifyCodeLangENUS;
+                } else if ([language_type isEqualToString:@"en-GB"]) {
+                    self.manager.lang = NTESVerifyCodeLangENGB;
                 } else if ([language_type isEqualToString:@"ja"]) {
                     self.manager.lang = NTESVerifyCodeLangJP;
                 } else if ([language_type isEqualToString:@"ko"]) {
