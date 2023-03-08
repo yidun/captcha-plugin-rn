@@ -6,6 +6,7 @@
 @interface RNCaptcha () <NTESVerifyCodeManagerDelegate>
 
 @property (nonatomic, strong) NTESVerifyCodeManager *manager;
+@property(nonatomic, assign) BOOL is_show_loading;
 
 @end
 
@@ -44,6 +45,33 @@ RCT_EXPORT_METHOD(init:(NSDictionary *)options)
             self.manager.shouldCloseByTouchBackground = is_touch_outside_disappear;
             if (dimAmount != 0.0) {
                 self.manager.alpha = dimAmount;
+            }
+            
+            [options.allKeys enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj isEqualToString:@"is_show_loading"]) {
+                    self.is_show_loading = [[options objectForKey:@"is_show_loading"] boolValue];
+                }
+            }];
+            
+            BOOL is_mourning_day = [[options objectForKey:@"is_mourning_day"] boolValue];
+            self.manager.mournTheme = is_mourning_day;
+            
+            NSString *size = [options objectForKey:@"size"];
+            if ([size isEqualToString:@"small"]) {
+                self.manager.fontSize = NTESVerifyCodeFontSizeSmall;
+            } else if ([size isEqualToString:@"medium"]) {
+                self.manager.fontSize = NTESVerifyCodeFontSizeMedium;
+            } else if ([size isEqualToString:@"large"]) {
+                self.manager.fontSize = NTESVerifyCodeFontSizeLarge;
+            } else if ([size isEqualToString:@"x-large"]) {
+                self.manager.fontSize = NTESVerifyCodeFontSizeXlarge;
+            } else {
+                
+            }
+            
+            int refreshInterval = [[options objectForKey:@"refreshInterval"] intValue];
+            if (refreshInterval > 0) {
+                self.manager.refreshInterval = refreshInterval;
             }
             
             if ([userInterfaceStyle isKindOfClass:[NSString class]]) {
